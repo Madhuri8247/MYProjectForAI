@@ -1,0 +1,307 @@
+﻿@using OnlineNews.Service
+@inject ICategoryService _categoryService;
+
+@{
+    var categoryList = _categoryService.GetAllCategory();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - OnlineNews</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/OnlineNews.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+       @*  Advertisement *@
+        <div class="row borderbar"></div>
+        <div class="card mt-2 mb-2 text-center border-white">
+            <div class="row">
+                <div class="row">
+                    <a asp-action="Index" asp-controller="Product" target="_blank" class="text-white  mx-2" aria-label="Advertisement">
+                        <img src="https://therampantgazette.blob.core.windows.net/articleimages/Project ADD.png" style="width:auto;" class="img-fluid" />
+                    </a>
+                </div>
+            </div>
+        </div>
+            <nav class="navbar navbar-expand-lg navbar-toggleable-sm secondLine allfont">
+                <div class="container-fluid dropdwnSearch">
+                    <div class="collapse navbar-collapse ms-auto" id="navbarNavDarkDropdown">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" style="font-size:30px" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ☰
+                                </a>
+                            <ul class="dropdown-menu bg-light flex-column bg-primary-subtle" style="font-size:20px; border:2px solid;" aria-labelledby="navbarDarkDropdownMenuLink">
+                                    @foreach (var item in categoryList)
+                                    {
+                                        <li class="nav-item">
+                                           <a class="nav-link" style="color:blue;" asp-area="" asp-controller="Article" asp-action="CategoryNews" asp-route-id="@item.Id">@item.Name</a>
+                                        </li>
+                                    }
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Article" asp-action="Index" style="color:blue;">All Articles</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Article" asp-action="ArchivedArticles" style="color:blue;">Archived Articles</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="WeatherSearch" style="color:blue;">Weather Forecast</a>
+                                    </li>
+                                    <li class="nav-item">
+                                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="BusinessData" style="color:blue;">Business Data</a>
+                                    </li>
+                                
+                                </ul>
+                            </li>
+                        </ul>
+                       <form asp-Controller="Article" asp-action="SearchResult" class="d-flex align-items-center gap-3">
+                        <label for="searchitem" class="sr-only"></label>
+                        <input type="text" name="searchitem" id="searchitem" class="searchBar form-control" placeholder="Search here by category..." />
+                        <button class="searchBtn btn btn-primary" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#fff">
+                                <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+                            </svg>
+                        </button>
+                       </form>
+                    </div>
+                <a class="navbar-brand" style="font-family: 'Abril Fatface', serif;font-size:40px;color: blue;" asp-area="" asp-controller="Home" asp-action="Index">ASAM</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse justify-content-xl-end">
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </nav>
+        <div class="row allfont" style="border:1px solid blue">
+            <nav class="navbar navbar-expand-sm  d-flex justify-content-center bg-primary-subtle navbar-primary">
+                <div class="container-fluid justify-content-center" style="font-size:20px">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index" style="color:blue;">Home</a>
+                        </li>
+                        @foreach (var item in categoryList)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Article" asp-action="CategoryNews" asp-route-id="@item.Id" style="color:blue;">@item.Name</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        { 
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:black">
+                                    Admin page
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="ListUsers">Manage users</a></li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="" asp-controller="Article" asp-action="AddArticle" style="color:blue;">Add Article</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="" asp-controller="Category" asp-action="Create" style="color:blue;">Add Category</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Product" asp-action="Create" style="color:blue;">Add Product</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        @if (User.IsInRole("Editor"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:black">
+                                    Editor's page
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Article" asp-action="AddArticle">Add articles</a></li>
+                                    @* <li><a class="dropdown-item" asp-controller="Editor" asp-action="ApproveArticle">Approve articles</a></li> *@
+                                    <li><a class="dropdown-item" asp-controller="Editor" asp-action="GetAllArticles">Approve articles</a></li>
+                                    @* <li><a class="dropdown-item" href="#">Approve Articles</a></li> *@
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Product" asp-action="Create" style="color:blue;">Add Product</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        @if (User.IsInRole("Writer"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:black">
+                                    Writer's page
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="" asp-controller="Article" asp-action="AddArticle" style="color:blue;">Add Article</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Product" asp-action="Create" style="color:blue;">Add Product</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        } 
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody() 
+        </main>
+    </div>
+    
+<footer class="bg-dark text-white pt-5 pb-4">
+ 
+    <section class="d-flex justify-content-center p-4" style="background-color: #6351ce;">
+      
+        <div class="me-5">
+            <span>Get connected with us on social networks:</span>
+        </div>
+   
+        <div>
+            <a href="https://sv-se.facebook.com/" class="text-white me-4">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+                <a href="https://x.com/" class="text-white me-4">
+                    <i class="fab fa-x"></i>
+                </a>
+            <a href="https://www.instagram.com/" class="text-white me-4">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://github.com/Gr-24-09/OnlineNews" class="text-white me-4">
+                <i class="fab fa-github"></i>
+            </a>
+        </div>
+    </section>
+ 
+    <section class="text-white">
+        <div class="container text-center text-md-start mt-5">
+     
+            <div class="row mt-3">
+                <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <h6 class="text-uppercase fw-bold">ASAM News</h6>
+                    <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+                    <p>
+                            Welcome to ASAM News, your trusted source for the latest headlines and breaking news. We provide timely, accurate, and engaging content on global events, politics, sports, technology, business, entertainment.
+                            Our experienced team works hard to bring you the news that matters. Whether it's sports scores, global updates, or tech insights, ASAM News has it all.
+                    </p>
+                </div>
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <h6 class="text-uppercase fw-bold">News </h6>
+                        <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+                        <p><a href="/Home/Index" class="text-white text-decoration-none">Home</a></p>
+                        <p><a href="/Article/CategoryNews/3" class="text-white text-decoration-none">World</a></p>
+                        <p><a href="/Article/CategoryNews/2" class="text-white text-decoration-none">Sweden</a></p>
+                        <p><a href="/Article/CategoryNews/1" class="text-white text-decoration-none">Travel</a></p>
+                        <p><a href="/Article/CategoryNews/4" class="text-white text-decoration-none">Economy</a></p>
+                        <p><a href="/Article/CategoryNews/5" class="text-white text-decoration-none">Sport</a></p>
+                        <p><a href="/Article/CategoryNews/7" class="text-white text-decoration-none">Health</a></p>
+                        <p><a href="/Home/WeatherSearch" class="text-white text-decoration-none">Weather</a></p>
+                    </div>
+
+                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                    <h6 class="text-uppercase fw-bold">Useful Links</h6>
+                    <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+                        <p><a href="/User/MyPage" class="text-white text-decoration-none">Your Account</a></p>
+                        <p><a href="/Subscription/Subscribe" class="text-white text-decoration-none">Join Us</a></p>
+                </div>
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                    <h6 class="text-uppercase fw-bold">Contact</h6>
+                    <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
+                        <p><i class="fas fa-home mr-3"></i> Västra Svedengatan 10, 582 73, Linköping</p>
+                    <p><i class="fas fa-envelope mr-3"></i> Newsinfo@example.com</p>
+                    <p><i class="fas fa-phone mr-3"></i> +46 22 222 22 22</p>
+                   
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+        © 2025 Copyright:
+        <a href="" class="text-white">OnlineNewsASAM.com</a>
+    </div>
+</footer>
+
+<!-- Footer Styles -->
+<style>
+    
+    footer {
+        background-color: #1c2331;
+        color: white;
+    }
+
+    .footer h6 {
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+    .footer p {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .footer a {
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .footer a:hover {
+        color: #d1d1d1;
+    }
+
+    .footer i {
+        color: #ffffff;
+    }
+
+    .footer .fab {
+        font-size: 1.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .footer .fab:hover {
+        color: #7c4dff;
+    }
+
+    .footer-copyright {
+        background-color: #23272b;
+        color: #ffffff;
+        font-size: 0.9rem;
+    }
+        .footer .container {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .footer .row {
+            text-align: center;
+        }
+
+        .footer .col-md-3, .footer .col-md-2, .footer .col-md-4 {
+            margin-bottom: 2rem;
+        }
+
+        .footer .fab {
+            font-size: 1.2rem;
+        }
+
+    body {
+        padding-bottom: 80px;
+    }
+</style>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

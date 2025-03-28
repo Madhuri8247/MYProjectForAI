@@ -1,0 +1,193 @@
+﻿@model OnlineNews.Models.Database.Article
+
+@{
+    ViewData["Title"] = "AddArticle";
+}
+
+
+<div class="row tbnm">
+    <div class="col-md-12">
+        <form asp-action="AddArticle" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PublishedDate" class="control-label"></label>
+                <input asp-for="PublishedDate" class="form-control" />
+                <span asp-validation-for="PublishedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LinkText" class="control-label"></label>
+                <input asp-for="LinkText" class="form-control" />
+                <span asp-validation-for="LinkText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Headline" class="control-label"></label>
+                <input asp-for="Headline" class="form-control" />
+                <span asp-validation-for="Headline" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContentSummary" class="control-label"></label>
+                <textarea asp-for="ContentSummary" class="form-control"></textarea>
+                <span asp-validation-for="ContentSummary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <input type="hidden" id="NewContent" asp-for="Content" class="form-control" />
+                <div id="editor">@Html.Raw(Model.Content)</div>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ImageLink" class="control-label"></label>
+                <input asp-for="ImageLink" class="form-control" />
+                <span asp-validation-for="ImageLink" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category.Name" class="control-label"></label>
+                <select name="ChosenCategory" class="form-control" size="5" asp-for="Category.Name" asp-items="Model.Categories"></select>
+            </div>
+            <div class="form-group m-3">
+                <input type="submit" value="Add Article" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<script src="https://unpkg.com/quill-html-edit-button@2.2.7/dist/quill.htmlEditButton.min.js"></script>
+
+<script>
+      Quill.register("modules/htmlEditButton", htmlEditButton);
+
+    const quill = new Quill('#editor', {
+      theme: 'snow',
+      modules: {
+          htmlEditButton: {}
+      }
+    });
+
+    function getQuillHtml() {return quill.root.innerHTML;}
+
+    function updateContent() {
+        let html = getQuillHtml();
+        document.querySelector('#NewContent').value = html;
+    };
+
+    quill.on('text-change', function (delta, source) {
+        updateContent();
+    });
+</script>
+
+
+<style>
+    .tbnm {
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        padding: 12px 15px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background-color: #fff;
+    }
+
+    .form-control:focus {
+        border-color: #66afe9;
+        box-shadow: 0 0 0 0.2rem rgba(102, 175, 233, 0.6);
+        outline: none;
+    }
+
+    .text-danger {
+        color: #d9534f;
+        font-size: 14px;
+    }
+    .btn-primary {
+        background: linear-gradient(145deg, #007bff, #0056b3);
+        border: none;
+        color: white;
+        font-size: 16px;
+        padding: 12px 25px;
+        border-radius: 8px;
+        width: 100%;
+        transition: background 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(145deg, #0056b3, #004085);
+        cursor: pointer;
+    }
+
+    .btn-primary:focus {
+        outline: none;
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    }
+       #editor {
+        min-height: 250px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 12px;
+        background-color: #fff;
+        font-size: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+    }
+
+    #editor:focus {
+        box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+    }
+
+    .form-group select {
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        transition: all 0.3s ease;
+        background-color: #fafafa;
+    }
+
+    .form-group select:focus {
+        border-color: #66afe9;
+        box-shadow: 0 0 0 0.2rem rgba(102, 175, 233, 0.6);
+    }
+     {
+        .form-group select {
+            font-size: 14px;
+            padding: 10px;
+            height: 180px;
+        }
+
+        .form-control {
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        .btn-primary {
+            font-size: 14px;
+            padding: 10px 20px;
+        }
+
+        #editor {
+            min-height: 200px;
+        }
+    }
+</style>

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<OnlineNews.Models.Product>
+
+
+@{
+    ViewData["Title"] = "AllProducts";
+    Layout = "~/Views/Shared/_ProductLayout.cshtml";
+}
+
+
+<div class="row justify-content-center mt-0">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="row justify-content-center">
+            @foreach (var item in Model)
+            {
+                <div class="col-12 col-md-6 col-lg-3 mb-3">
+                    <div class="card border-white mb-1">
+                        <a asp-action="Details" asp-controller="Product" asp-route-id="@item.Id">
+                            <img src="@item.ImageUrl" class="card-img-top img-fluid" style="width:270px;height:150px" />
+                        </a>
+                        <div class="card-body">
+                            <h6 class="card-title" style="color:#800000;"><b>@item.Name</b></h6>
+                            <p>Price: <b style="font-size:25px;color:#221199">@item.Price kr</b></p>
+                            <p style="color:#0033ff;">Only @item.StockQuantity left in stock</p>
+                        </div>
+                    </div>
+                    <a asp-action="AddProductToCart" asp-controller="Cart" asp-route-id="@item.Id">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#800000"><path d="M440-600v-120H320v-80h120v-120h80v120h120v80H520v120h-80ZM280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM40-800v-80h131l170 360h280l156-280h91L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68.5-39t-1.5-79l54-98-144-304H40Z" /></svg>
+                    </a>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Editor") || User.IsInRole("Editor"))
+                    {
+                        <a asp-action="Edit" asp-controller="Product" asp-route-id="@item.Id">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#800000"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" /></svg>
+                        </a>
+                        <a asp-action="Details" asp-controller="Product" asp-route-id="@item.Id">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#800000"><path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" /></svg>
+                        </a>
+                        <a asp-action="Delete" asp-controller="Product" asp-route-id="@item.Id">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#800000"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" /></svg>
+                        </a>
+                    }
+                    <hr />
+                </div>
+            }
+        </div>
+    </div>
+</div>

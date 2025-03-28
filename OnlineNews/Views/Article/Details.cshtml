@@ -1,0 +1,145 @@
+﻿@model OnlineNews.Models.Database.Article
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="card mt-2 mb-2 text-center border-white bg-light">
+    <div class="row">
+        <div class="row">
+            <a href="https://www.adobe.com/se/products/photoshop.html?sdid=SPVLM3PR&mv=display&mv2=display&gclid=EAIaIQobChMIit-R2obkiwMV-hmiAx1_lzStEAEYASAAEgLY__D_BwE" target="_blank" class="text-white  mx-2" aria-label="Advertisement">
+                <img src="https://cdn.flashtalking.com/189813/4961332/FY24Q4_CC_Photography_Photoshop_SE_SV_MaxOct2024-DistractionRemoval_ST_728x90_DistractionRemoval_Release-Ps-MAXOct.jpg?472163644" style="width:auto;" class="img-fluid" />
+            </a>
+        </div>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<div class="container allfont" style="text-align:center;">
+    <div class="row" style="text-align:center;">
+        <h1><b>@Model.Headline</b></h1>
+    </div>
+</div>
+
+<div class="container mt-2">
+    <div class="row justify-content-evenly align-items-center">
+        <!-- Time Ago -->
+        <div class="col-auto">
+            <span>@ViewData["TimeAgo"]</span>
+        </div>
+
+        <!-- Share Dropdown -->
+        <div class="col-auto">
+            <div class="dropdown">
+                <a class="dropdown-toggle" type="button" id="shareDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Share
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5">
+                        <path d="M680-80q-50 0-85-35t-35-85q0-6 3-28L282-392q-16 15-37 23.5t-45 8.5q-50 0-85-35t-35-85q0-50 35-85t85-35q24 0 45 8.5t37 23.5l281-164q-2-7-2.5-13.5T560-760q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35q-24 0-45-8.5T598-672L317-508q2 7 2.5 13.5t.5 14.5q0 8-.5 14.5T317-452l281 164q16-15 37-23.5t45-8.5q50 0 85 35t35 85q0 50-35 85t-85 35Zm0-80q17 0 28.5-11.5T720-200q0-17-11.5-28.5T680-240q-17 0-28.5 11.5T640-200q0 17 11.5 28.5T680-160ZM200-440q17 0 28.5-11.5T240-480q0-17-11.5-28.5T200-520q-17 0-28.5 11.5T160-480q0 17 11.5 28.5T200-440Zm480-280q17 0 28.5-11.5T720-760q0-17-11.5-28.5T680-800q-17 0-28.5 11.5T640-760q0 17 11.5 28.5T680-720Zm0 520ZM200-480Zm480-280Z" />
+                    </svg>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="shareDropdown">
+                    <li>
+                        <a class="dropdown-item a" href="https://sv-se.facebook.com/" target="_blank">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a class="dropdown-item a" href="https://x.com/" target="_blank">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a class="dropdown-item a" href="https://www.instagram.com/" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Check if the user is a subscriber, unless the user is an admin/editor/writer -->
+@if (ViewBag.Subscription == null && !(User.IsInRole("Admin") || User.IsInRole("Editor") || User.IsInRole("Writer")))
+{
+    <!-- Show a message for non-subscribers -->
+    <div class="alert alert-warning">
+        You need a subscription to access this article. <a href="@Url.Action("Subscribe", "Subscription")">Subscribe now</a> to read this content.
+    </div>
+}
+else if (ViewBag.Subscription?.SubscriptionType?.TypeName == "Basic" && Model.EditorsChoice && !(User.IsInRole("Admin") || User.IsInRole("Editor") || User.IsInRole("Writer")))
+{
+    <!-- Show a message for Basic subscribers trying to view an Editors' Choice article -->
+    <div class="alert alert-warning">
+        Basic subscribers cannot access Editors' Choice articles. <a href="@Url.Action("Subscribe", "Subscription")">Upgrade to Premium</a> for full access.
+    </div>
+}
+else
+{
+    <!-- If the user is a subscriber, admin, editor, or writer, show the article content -->
+    <div class="mt-3"></div>
+    <div class="row justify-content-center">
+        <img src="@Model.ImageLink" alt="picture of Article" class="img" />
+    </div>
+
+    <div class="container" style="margin-top:15px;">
+        @if (!string.IsNullOrEmpty(@Model.Content))
+        {
+            <div class="row allfont">
+                <p>@Html.Raw(@Model.Content)</p>
+            </div>
+        }
+    </div>
+
+    <div class="icons-container">
+        <p class="icons"><b>Likes:</b> @Model.Likes</p>
+        <p class="icons"><b>Views:</b> @Model.Views</p>
+
+        @using (Html.BeginForm("LikeAnArticle", "Article", new { id = Model.Id }, FormMethod.Post))
+        {
+            <button class="icons" aria-label="Like article" value="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5">
+                    <path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z" />
+                </svg>
+            </button>
+        }
+
+        @using (Html.BeginForm("DisLikeAnArticle", "Article", new { id = Model.Id }, FormMethod.Post))
+        {
+            <button class="icons" aria-label="Dislike article" value="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5">
+                    <path d="M240-840h440v520L400-40l-50-50q-7-7-11.5-19t-4.5-23v-14l44-174H120q-32 0-56-24t-24-56v-80q0-7 2-15t4-15l120-282q9-20 30-34t44-14Zm360 80H240L120-480v80h360l-54 220 174-174v-406Zm0 406v-406 406Zm80 34v-80h120v-360H680v-80h200v520H680Z" />
+                </svg>
+            </button>
+        }
+    </div>
+}
+
+<hr />
+
+<style>
+    .dropdown-toggle {
+        padding: 5px 15px;
+        color: black;
+        text-decoration: none;
+    }
+
+    .dropdown-menu {
+        min-width: 150px;
+    }
+
+    .dropdown-item i {
+        margin-right: 8px;
+    }
+
+    .dropdown-toggle::after {
+        content: none;
+    }
+
+    .a {
+        display: inline-flex;
+    }
+</style>
+

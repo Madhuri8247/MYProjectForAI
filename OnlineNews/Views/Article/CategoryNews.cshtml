@@ -1,0 +1,234 @@
+﻿
+@model IEnumerable<OnlineNews.Models.Database.Article>
+
+@{
+    ViewData["Title"] = "CategoryNews";
+}
+
+@{
+    var categoryName = ViewData["CategoryName"];
+    var isEconomyCategory = ViewBag.IsEconomyCategory as bool?;
+    var isWeatherCategory = ViewBag.IsWeatherCategory as bool?;
+    var weather = ViewBag.Weather as OnlineNews.Models.API.WeatherForecast;
+    var businessData = ViewBag.Data as OnlineNews.Models.API.Businessprice;
+    var categoryId = ViewData["CategoryId"];
+}
+
+<div class="card mt-2 mb-2 text-center border-white bg-light">
+    <div class="row">
+        <div class="row">
+            <a href="https://www.adobe.com/se/products/photoshop.html?sdid=SPVLM3PR&mv=display&mv2=display&gclid=EAIaIQobChMIit-R2obkiwMV-hmiAx1_lzStEAEYASAAEgLY__D_BwE" target="_blank" class="text-white  mx-2" aria-label="Advertisement">
+                <img src="https://cdn.flashtalking.com/189813/4961332/FY24Q4_CC_Photography_Photoshop_SE_SV_MaxOct2024-DistractionRemoval_ST_728x90_DistractionRemoval_Release-Ps-MAXOct.jpg?472163644" style="width:auto;" class="img-fluid" />
+            </a>
+        </div>
+    </div>
+</div>
+<h1 class="row" style="border-bottom: 2px solid black"><b>@categoryName</b></h1>
+
+@if (isEconomyCategory == true && businessData != null)
+{
+    <h4 class="row justify-content-center" style="color:blue;margin-top:20px;margin-bottom:20px;">
+        <b class="row" style="text-align:center;">Business Prices</b>
+    </h4>
+    <br />
+
+    <!-- Check if 'top10' is not null or empty before rendering the table -->
+    @if (businessData?.top10 != null && businessData.top10.Length > 0)
+    {
+        <div class="row justify-content-center" style="margin-left:5px">
+            <table id="prices">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>PrevClose</th>
+                        <th>%Change</th>
+                        <th>Close</th>
+                        <th>Symbol</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < businessData.top10.Length; i++)
+                    {
+                        <tr>
+                            <td>@businessData.top10[i].name</td>
+                            <td>@businessData.top10[i].prevClose</td>
+                            <td>@businessData.top10[i].percentChange</td>
+                            <td>@businessData.top10[i].close</td>
+                            <td>@businessData.top10[i].symbol</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="mb-4"></div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">No business prices available at the moment.</div>
+        <div class="mb-4"></div>
+
+    }
+}
+
+@if (ViewBag.IsWeatherCategory != null && ViewBag.IsWeatherCategory == true)
+{
+    <!-- Weather Search Form -->
+    <div class="row justify-content-center searchbtnWeather allfont">
+        <h4 class="row" style="color:blue;text-align:center;"><b>Search Weather by City</b></h4>
+        <form method="get" action="@Url.Action("CategoryNews", new { id = categoryId, city = "" })" class="col-12 col-sm-8 col-md-6 col-lg-4">
+            <input type="text" name="city" placeholder="Enter city name" value="@ViewData["City"]" required class="form-control mb-3" />
+            <button class="btn btn-primary w-100" type="submit">Search</button>
+        </form>
+        <div class="mb-4"></div>
+    </div>
+
+    <!-- Display Weather Data if Available -->
+    @if (ViewBag.Weather != null)
+    {
+        <div class="row weatherbtn justify-content-center mb-4">
+            <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+                <div class="weather-card bg-primary" style="text-align:center;color:white;">
+                    <br />
+                    <h4><b>Weather in @ViewBag.Weather.city</b></h4>
+                    <div>
+                        @if (ViewBag.Weather.icon != null)
+                        {
+                            <img src="@ViewBag.Weather.icon.url" alt="Weather icon" width="150" height="150" />
+                        }
+                        else
+                        {
+                            <p>No weather data available. Please enter a valid city.</p>
+                        }
+                    </div>
+                    <h5><strong>Summary:</strong> @ViewBag.Weather.summary</h5>
+                    <h5><strong>Temperature:</strong> @ViewBag.Weather.temperatureC °C / @ViewBag.Weather.temperatureF °F</h5>
+                    <h5><strong>Humidity:</strong> @ViewBag.Weather.humidity%</h5>
+                    <h5><strong>Wind Speed:</strong> @ViewBag.Weather.windSpeed km/h</h5>
+                    <h5><strong>Date:</strong> @ViewBag.Weather.date.ToString("MMMM dd, yyyy")</h5>
+                    <br />
+                </div>
+            </div>
+        </div>
+    }
+}
+<div class="mb-4"></div>
+<div class="mb-4"></div>
+<div class="row justify-content-center allfont">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-3 mb-3 justify-content-center">
+            @foreach (var item in Model.Take(3))
+            {
+                <partial name="_EditorsPartial" model="item" />
+                @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                {
+                    <a asp-action="Edit" asp-controller="Article" asp-route-id="@item.Id"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" /></svg></a>
+                    <a asp-action="GetAllArticles" asp-controller="Editor" asp-route-id="@item.Id"></a>
+                    <a asp-action="Delete" asp-controller="Article" asp-route-id="@item.Id"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5D0E07"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" /></svg></a>
+                }
+                @if (User.IsInRole("Writer"))
+                {
+                    <a class="dropdown-item" asp-area="" asp-controller="Article" asp-action="EditAsWriter" asp-route-id="@item.Id"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5"><path d="M80 0v-160h800V0H80Zm160-320h56l312-311-29-29-28-28-311 312v56Zm-80 80v-170l448-447q11-11 25.5-17t30.5-6q16 0 31 6t27 18l55 56q12 11 17.5 26t5.5 31q0 15-5.5 29.5T777-687L330-240H160Zm560-504-56-56 56 56ZM608-631l-29-29-28-28 57 57Z" /></svg></a>
+                }
+            }
+        </div>
+        <div class="col-12 col-md-6 col-lg-6 mb-3 justify-content-center">
+            @foreach (var item in Model.Skip(3).Take(2))
+            {
+                <partial name="_ArticlePartial" model="item" />
+                @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                {
+                    <a asp-action="Edit" asp-controller="Article" asp-route-id="@item.Id"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" /></svg></a>
+                    <a asp-action="GetAllArticles" asp-controller="Editor" asp-route-id="@item.Id"></a>
+                    <a asp-action="Delete" asp-controller="Article" asp-route-id="@item.Id"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5D0E07"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" /></svg></a>
+                }
+                @if (User.IsInRole("Writer"))
+                {
+                    <a class="dropdown-item" asp-area="" asp-controller="Article" asp-action="EditAsWriter" asp-route-id="@item.Id"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5"><path d="M80 0v-160h800V0H80Zm160-320h56l312-311-29-29-28-28-311 312v56Zm-80 80v-170l448-447q11-11 25.5-17t30.5-6q16 0 31 6t27 18l55 56q12 11 17.5 26t5.5 31q0 15-5.5 29.5T777-687L330-240H160Zm560-504-56-56 56 56ZM608-631l-29-29-28-28 57 57Z" /></svg></a>
+                }
+            }
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 justify-content-center">
+            @foreach (var item in Model.Skip(5).Take(3))
+            {
+                <partial name="_EditorsPartial" model="item" />
+                @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                {
+                    <a asp-action="Edit" asp-controller="Article" asp-route-id="@item.Id"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" /></svg></a>
+                    <a asp-action="GetAllArticles" asp-controller="Editor" asp-route-id="@item.Id"></a>
+                    <a asp-action="Delete" asp-controller="Article" asp-route-id="@item.Id"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5D0E07"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" /></svg></a>
+                }
+                @if (User.IsInRole("Writer"))
+                {
+                    <a class="dropdown-item" asp-area="" asp-controller="Article" asp-action="EditAsWriter" asp-route-id="@item.Id"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5"><path d="M80 0v-160h800V0H80Zm160-320h56l312-311-29-29-28-28-311 312v56Zm-80 80v-170l448-447q11-11 25.5-17t30.5-6q16 0 31 6t27 18l55 56q12 11 17.5 26t5.5 31q0 15-5.5 29.5T777-687L330-240H160Zm560-504-56-56 56 56ZM608-631l-29-29-28-28 57 57Z" /></svg></a>
+                }
+            }
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center allfont">
+    <div class="row justify-content-center">
+        <div class="row justify-content-center">
+            @foreach (var item in Model.Skip(8))
+            {
+                <div class="col-12 col-md-6 col-lg-3 mb-3">
+                    <partial name="_EditorsPartial" model="item" />
+                    @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                    {
+                        <a asp-action="Edit" asp-controller="Article" asp-route-id="@item.Id"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" /></svg></a>
+                        <a asp-action="GetAllArticles" asp-controller="Editor" asp-route-id="@item.Id"></a>
+                        <a asp-action="Delete" asp-controller="Article" asp-route-id="@item.Id"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5D0E07"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" /></svg></a>
+                    }
+                    @if (User.IsInRole("Writer"))
+                    {
+                        <a class="dropdown-item" asp-area="" asp-controller="Article" asp-action="EditAsWriter" asp-route-id="@item.Id"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5"><path d="M80 0v-160h800V0H80Zm160-320h56l312-311-29-29-28-28-311 312v56Zm-80 80v-170l448-447q11-11 25.5-17t30.5-6q16 0 31 6t27 18l55 56q12 11 17.5 26t5.5 31q0 15-5.5 29.5T777-687L330-240H160Zm560-504-56-56 56 56ZM608-631l-29-29-28-28 57 57Z" /></svg></a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    #prices {
+        font-family: 'Times New Roman', Times, serif;
+        border-collapse: collapse;
+        width: 100%; /* Use 100% for better responsiveness */
+        font-weight: bold;
+    }
+
+        #prices td, #prices th {
+            border: 2px solid black;
+            text-align: center;
+            padding: 10px; /* Add padding for better spacing */
+        }
+
+        #prices tr:nth-child(even) {
+            background-color: darkgrey;
+        }
+
+        #prices th {
+            text-align: center;
+            background-color: darkslateblue;
+            color: white;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+    /* Optional: Style for alert message */
+    .alert {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 1.2em;
+    }
+
+    .weather-info {
+        background-color: lightblue;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+</style>

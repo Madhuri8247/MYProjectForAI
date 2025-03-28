@@ -1,0 +1,32 @@
+﻿@model OnlineNews.Models.ViewModels.CartViewModel
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_ProductLayout.cshtml";
+}
+
+<h1>Your Cart</h1>
+
+
+
+<div id="top-padding" class="container">
+    <div class="row">
+        <partial name="_CartCheckOutListPartial"></partial>     <!-- PARTIAL , EACH MOVIE THAT EXIST IN THE CART SEPARATELY-->
+    </div>
+</div>
+
+<script>
+    function adjustPadding() {
+        const header = document.querySelector('header');
+        const mainContent = document.getElementById('top-padding');
+
+        if (header && mainContent) {
+            const headerHeight = header.offsetHeight;
+            mainContent.style.paddingTop = `${headerHeight}px`;
+        }
+    }
+
+    window.addEventListener('load', adjustPadding);
+    window.addEventListener('resize', adjustPadding);
+</script>

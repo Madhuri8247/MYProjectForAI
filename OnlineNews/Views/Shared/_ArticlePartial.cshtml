@@ -1,0 +1,52 @@
+﻿@model OnlineNews.Models.Database.Article
+
+
+<div class="card border-white mb-1">
+    @if (Model.EditorsChoice)
+    {
+        <span class="badge badge-success">Editor's Choice</span>
+    }
+    <a asp-action="Details" asp-controller="Article" asp-route-id="@Model.Id"><img src="@Model.ImageLink" class="card-img-top img-fluid" style="width:640px;height:350px" /></a>
+    <div class="card-body">
+        <a style="color:black;text-decoration-line: none" asp-action="Details" asp-controller="Article" asp-route-id="@Model.Id"><h2 class="card-title"><b>@Model.Headline</b></h2></a>
+        <a style="color:black;text-decoration-line: none;font-size:medium" asp-action="Details" asp-controller="Article" asp-route-id="@Model.Id"><p>@Model.ContentSummary</p></a>
+    </div>
+</div>
+
+<style>
+    .badge {
+        padding: 5px 10px;
+        background-color: #28a745; /* Green color */
+        color: white;
+        font-size: 14px;
+        border-radius: 5px;
+        position: absolute; /* Position the badge */
+        top: 10px; /* Moves the badge 10px from the top */
+        left: 50%; /* Moves the badge to the center horizontally */
+        transform: translateX(-50%); /* Adjusts the badge position to be truly centered */
+    }
+
+    .badge-success {
+        background-color: #28a745;
+    }
+
+    .badge {
+        font-size: 12px;
+        padding: 4px 8px;
+        top: 8px;
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%); /* Keep the badge centered */
+    }
+
+    .badge {
+        font-size: 10px;
+        padding: 3px 6px;
+        top: 5px;
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%); /* Keep the badge centered */
+    }
+    /* Ensure the card body has some padding and layout */
+    .card-body {
+        position: relative; /* Allow absolute positioning of the badge */
+    }
+</style>

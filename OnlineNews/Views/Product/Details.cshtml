@@ -1,0 +1,39 @@
+﻿@model OnlineNews.Models.Product
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_ProductLayout.cshtml";
+}
+
+<div class="row allfont" style="text-align:center;">
+    <div class="row" style="text-align:center;">
+        <h1 style="text-align:center;"><b>@Model.Name</b></h1>
+    </div>
+</div>
+<div class="mt-3"></div>
+<div class="row justify-content-center">
+    <img src="@Model.ImageUrl" alt="picture of Article" style="width:420px;height:310px;" />
+</div>
+<div class="row justify-content-center">
+    <p><b>Price:</b> @Model.Price kr</p>
+</div>
+<div class="row justify-content-center">
+    <p><b>Category:</b> @Model.Category</p>
+</div>
+<div class="row allfont">
+    <p><b>About This Item:</b>@Html.Raw(@Model.Description)</p>
+</div>
+<div class="row justify-content-center">
+    <p><b>In Stock:@Model.StockQuantity </b></p>
+</div>
+
+<div>
+    <a class="btn btn-success" asp-action="AddProductToCart" asp-controller="Cart" asp-route-id="@Model.Id">Add To Cart</a>
+    @if (User.IsInRole("Admin") || User.IsInRole("Editor") || User.IsInRole("Editor"))
+    {
+         <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> 
+    }
+    <a asp-action="Index">Back to List</a>
+</div>
+<hr />
+

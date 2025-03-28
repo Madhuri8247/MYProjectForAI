@@ -1,0 +1,132 @@
+﻿@model OnlineNews.Models.API.WeatherForecast
+
+@{
+    ViewData["Title"] = "Weather Search";
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-12 card mt-1 mb-2 text-center border-white bg-light">@* advertisement *@
+    <div class="row">
+        <div class="row">
+            <a href="https://www.bbc.com/storyworks/endless-experiences-sb/island-escapes-discover-malaysias-breathtaking-beaches-and-marine-wonders?utm_source=BBC-ROS&utm_medium=Traffic-Driver-Billboard&utm_campaign=endless-experiences&utm_content=Article04-v2" target="_blank" class="text-white  mx-2" aria-label="Advertisement">
+                <img src="https://tpc.googlesyndication.com/simgad/400111630785226204" style="width:auto;height:max-content" class="img-fluid;" />
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Search form to enter city name -->
+<div class="row justify-content-center searchbtnWeather allfont">
+    <h2><b>Search Weather by City</b></h2>
+    <form method="get" asp-controller="Home" asp-action="WeatherSearch" class="col-12 col-sm-8 col-md-6 col-lg-4">
+        <input type="text" name="city" placeholder="Enter city name" value="@ViewData["City"]" required class="form-control mb-3" />
+        <button class="btn btn-primary w-100" type="submit">Search</button>
+    </form>
+</div>
+<!-- Display Weather Data -->
+@if (Model != null)
+{
+    <div class="row weatherbtn justify-content-center allfont">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+            <div class="weather-card">
+                <h4><b>Weather in @Model.city</b></h4>
+                <div>
+                    @if (Model.icon != null)
+                    {
+                        <img src="@Model.icon.url" alt="Weather icon" width="100" height="100" />
+                    }
+                    else
+                    {
+                        <p>No weather data available. Please enter a valid city.</p>
+                    }
+                </div>
+                <h5><strong>Summary:</strong> @Model.summary</h5>
+                <h5><strong>Temperature:</strong> @Model.temperatureC °C / @Model.temperatureF °F</h5>
+                <h5><strong>Humidity:</strong> @Model.humidity%</h5>
+                <h5><strong>Wind Speed:</strong> @Model.windSpeed km/h</h5>
+                <h5><strong>Date:</strong> @Model.date.ToString("MMMM dd, yyyy")</h5>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="d-flex gap-3 justify-content-center">
+    <a class="btn btn-secondary" asp-area="" asp-controller="Article" asp-action="Index" style="color:white;">All Articles</a>
+    <a class="btn btn-secondary" asp-area="" asp-controller="Home" asp-action="Index" style="color:white;">Back to Home Page</a>
+</div>
+
+
+<!-- Advertisement -->
+<div class="row justify-content-center mt-5">
+    <div class="col-10">
+        <div class="row">
+                <div class="card mt-2 mb-1 text-center border-white">
+                    <a href="https://order.kfc.nu/se/sv-se?dclid=CNOFj4nb3osDFRbLOwId3wAhDg&gclid=EAIaIQobChMIjZq5htveiwMVhWqRBR2OXhjXEAEYASAAEgL8u_D_BwE" target="_blank" class="text-white">
+                        <img src="https://web-images.futureordering.com/images/kfc/promos/KFC_HEMSIDA_LAVA_BUCKET_1920x900.png?2_1680523460" style="width:-webkit-fit-content;"class="img-fluid" />
+                    </a>
+                </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Search form */
+    .searchbtnWeather {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        text-align: center;
+    }
+
+        .searchbtnWeather input, .searchbtnWeather button {
+            max-width: 100%;
+        }
+
+    /* Weather data container */
+    .weatherbtn {
+        background: #3D79BC;
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .weather-card {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .weatherbtn h4 {
+        font-weight: bold;
+    }
+
+    /* Make sure the weather icon and text scale correctly on small screens */
+    .weatherbtn img {
+        max-width: 100px;
+        margin-bottom: 20px;
+    }
+
+    /* Advertisement card */
+    .card img {
+        width: 80%;
+        height: 50%;
+    }
+    .weatherbtn {
+        padding: 15px;
+        margin: 10px;
+    }
+
+    .weather-card h5 {
+        font-size: 19px;
+    }
+
+    /* Make sure the weather icon is smaller on smaller screens */
+    .weatherbtn img {
+        max-width: 100px;
+    }
+
+    .weather-card h5 {
+        font-size: 19px;
+    }
+</style>

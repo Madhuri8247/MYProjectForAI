@@ -1,0 +1,196 @@
+﻿@model OnlineNews.Models.ViewModels.CartViewModel
+@if(Model!= null)
+{
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Cart Items -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        @foreach (var item in Model.CartItem)
+                        {
+                            <div class="row cart-item mb-3">
+                                <div class="col-md-1">
+                                    <img src="@item.product.ImageUrl" alt="Product Image" class="img-fluid rounded" />
+                                </div>
+                                <div class="col-md-5">
+                                    <h5 class="card-title">Product: @item.product.Name</h5>
+                                    <p class="text-muted">Category: @item.product.Category</p>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="input-group">
+                                        <form asp-controller="Cart" asp-action="LowerQuantity" method="post">
+                                            <button type="hidden" name="Id" value="@item.product.Id" class="btn btn-outline-secondary btn-sm" type="button">-</button>
+                                        </form>
+                                        <input style="max-width:100px" type="text" class="form-control form-control-sm text-center quantity-input" value="@item.Quantity">
+                                        <form asp-controller="Cart" asp-action="AddProductToCart" method="post">
+                                            <button type="hidden" name="Id" value="@item.product.Id" class="btn btn-outline-secondary btn-sm" type="button">+</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 text-end">
+                                    <p class="fw-bold">@(@item.product.Price * item.Quantity) kr</p>
+                                    <form asp-controller="Cart" asp-action="RemoveProductFromCart" method="post">
+                                        <input type="hidden" name="Id" value="@item.product.Id" />
+                                        <button class="btn btn-sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#800000"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" /></svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <hr>
+                        }
+                    </div>
+                </div>
+                <!-- Continue Shopping Button -->
+                <div class="text-start mb-4">
+                    <a asp-area="" asp-controller="Product" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <!-- Cart Summary -->
+                <div class="card cart-summary">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">Order Summary</h5>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Price(tax excl.) </span>
+                            <span>@Model.SubTotalPrice.ToString("0.00") kr</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Tax</span>
+                            <span>@Model.Tax.ToString("0.00") kr</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-4">
+                            <strong>Total</strong>
+                            <strong>@Model.TotalPrice.ToString("0.00") kr</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form asp-controller="Cart" asp-action="ProceedToCheckout" method="post">
+            <div class="row">
+                <div class="col-lg-4">
+                    <!-- Customer Details Form -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Billing Details</h5>
+                            <div class="mb-3">
+                                <label for="Email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="Email" name="Customer.EmailAddress" required>
+                            </div>
+                            <button type="button" class="btn btn-outline-secondary mb-3" onclick="fetchCustomerDetails()">Load Customer Data</button>
+                            <!-- Billing Details -->
+                            <div class="mb-3">
+                                <label for="BillingFirstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="BillingFirstName" name="Customer.FirstNameBillingAddress" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="BillingLastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="BillingLastName" name="Customer.LastNameBillingAddress" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="BillingAddress" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="BillingAddress" name="Customer.BillingAddress" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="BillingZip" class="form-label">Zip Code</label>
+                                <input type="text" class="form-control" id="BillingZip" name="Customer.BillingZip" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="BillingCity" class="form-label">City</label>
+                                <input type="text" class="form-control" id="BillingCity" name="Customer.BillingCity" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <!-- Delivery Details Form -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Delivery Details</h5>
+                            <!-- Delivery Details -->
+                            <div class="mb-3">
+                                <label for="DeliveryFirstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="DeliveryFirstName" name="Customer.FirstNameDeliveryAddress" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="DeliveryLastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="DeliveryLastName" name="Customer.LastNameDeliveryAddress" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="DeliveryAddress" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="DeliveryAddress" name="Customer.DeliveryAddress" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="DeliveryZip" class="form-label">Zip Code</label>
+                                <input type="text" class="form-control" id="DeliveryZip" name="Customer.DeliverZip" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="DeliveryCity" class="form-label">City</label>
+                                <input type="text" class="form-control" id="DeliveryCity" name="Customer.DeliverCity" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Proceed to Checkout</button>
+        </form>
+    </div>
+
+}
+else
+{
+    <p>Your Cart is Empty</p>
+}
+
+<script>
+    function fetchCustomerDetails() {
+        var email = document.getElementById('Email').value;
+
+        if (email) {
+            fetch('/Cart/GetCustomerByEmail?email=' + email)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data) {
+                        // Fill out the form with customer data
+                        document.getElementById('BillingFirstName').value = data.firstName;
+                        document.getElementById('BillingLastName').value = data.lastName;
+                        document.getElementById('BillingAddress').value = data.billingAddress;
+                        document.getElementById('BillingZip').value = data.billingZip;
+                        document.getElementById('BillingCity').value = data.billingCity;
+                        document.getElementById('DeliveryFirstName').value = data.firstName;
+                        document.getElementById('DeliveryLastName').value = data.lastName;
+                        document.getElementById('DeliveryAddress').value = data.billingAddress;
+                        document.getElementById('DeliveryZip').value = data.billingZip;
+                        document.getElementById('DeliveryCity').value = data.billingCity;
+                    } else {
+                        alert('Customer not found. Please provide manual details.');
+                    }
+                })
+                .catch(error => {
+                    alert('Error fetching customer data: ' + error.message);
+                });
+        } else {
+            alert('Please enter a valid email address.');
+        }
+    }
+
+    // Function to copy Billing details to Delivery details
+    function copyBillingToDelivery() {
+        document.getElementById('DeliveryFirstName').value = document.getElementById('BillingFirstName').value;
+        document.getElementById('DeliveryLastName').value = document.getElementById('BillingLastName').value;
+        document.getElementById('DeliveryAddress').value = document.getElementById('BillingAddress').value;
+        document.getElementById('DeliveryZip').value = document.getElementById('BillingZip').value;
+        document.getElementById('DeliveryCity').value = document.getElementById('BillingCity').value;
+    }
+</script>

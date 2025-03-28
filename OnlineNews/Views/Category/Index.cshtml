@@ -1,0 +1,108 @@
+﻿@model IEnumerable<OnlineNews.Models.Database.Category>
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<div class="col-md-10">
+    <br />
+
+    <div class="row">
+        <h2>Categories</h2>
+    </div>
+    @foreach (var category in Model)
+    {
+        <div class="row">
+       @*      <h3>@category.Id</h3> *@
+            <div class="col-2">
+                <em>@category.Name</em>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="text-center mt-4">
+    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Home Page</a>
+</div>
+
+<style>
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+h2 {
+    color: DarkSlateGray;
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.col-md-10 {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.col-2 {
+    font-size: 1.2rem;
+    color: #333;
+    font-style: italic;
+    text-align: left;
+    margin-left: 30px;
+    padding-top: 8px;
+}
+
+a {
+    color: RoyalBlue;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+a:hover {
+    color: MediumSlateBlue;
+    text-decoration: underline;
+}
+
+hr {
+    border: 0;
+    border-top: 2px solid #e0e0e0;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+ {
+    .col-md-10 {
+        width: 90%;
+    }
+    .col-2 {
+        font-size: 1rem;
+        margin-left: 20px;
+    }
+}
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+</style>

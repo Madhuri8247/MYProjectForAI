@@ -1,0 +1,20 @@
+﻿@model IEnumerable<OnlineNews.Models.Database.Article>
+
+@{
+    ViewData["Title"] = "LatestNews";
+}
+
+<h2>LatestNews</h2>
+
+<div class="text-center row">
+    <div class="col-sm-9">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-3 m-3">
+                    <partial name="_ArticlePartial" model="item" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

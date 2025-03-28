@@ -1,0 +1,44 @@
+﻿@model OnlineNews.Models.Database.User
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<h3>Edit Profile</h3>
+
+<form asp-action="EditProfile" method="post">
+    <div class="form-group">
+        <label for="FirstName">First Name</label>
+        <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" required />
+    </div>
+    <div class="form-group">
+        <label for="LastName">Last Name</label>
+        <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.LastName" required />
+    </div>
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
+    </div>
+    <div class="form-group">
+        <label for="DateofBirth">Date of Birth</label>
+        <input type="date" class="form-control" id="DateofBirth" name="DateofBirth" value="@Model.DateofBirth.ToString("yyyy-MM-dd")" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @TempData["Message"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @TempData["Error"]
+    </div>
+}
+
+
+<a href="@Url.Action("MyPage", "User")" class="btn btn-secondary">Back to Profile</a>

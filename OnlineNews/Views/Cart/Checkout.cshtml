@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = "~/Views/Shared/_ProductLayout.cshtml";
+}
+
+<h1>Checkout</h1>
+
+<div id="top-padding" class="container">
+
+    <h2>Thank you for your order!</h2>
+
+
+    <script>
+        function adjustPadding() {
+            const header = document.querySelector('header');
+            const mainContent = document.getElementById('top-padding');
+
+            if (header && mainContent) {
+                const headerHeight = header.offsetHeight;
+                mainContent.style.paddingTop = `${headerHeight}px`;
+            }
+        }
+
+        window.addEventListener('load', adjustPadding);
+        window.addEventListener('resize', adjustPadding);
+    </script>

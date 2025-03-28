@@ -1,0 +1,111 @@
+﻿@model IEnumerable<OnlineNews.Models.Database.Article>
+
+@{
+    ViewData["Title"] = "EditorsChoiced";
+}
+
+<h3 class="row allfont custom-margin" style="text-align:center;color:green;border-bottom: 2px solid green">
+    <b>Editors' Choice</b>
+</h3>
+
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (User.IsInRole("Admin") || User.IsInRole("Editor") || User.IsInRole("Writer") || ViewBag.SubscriptionType == "Premium")
+{
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            <!-- First Section - Display 3 Articles -->
+            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                @foreach (var item in Model.Take(3))
+                {
+                    <partial name="_EditorsPartial" model="item" />
+                    
+                    <!-- Admin or Editor can edit and delete articles -->
+                    @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                    {
+                        <div class="action-buttons">
+                            <a asp-action="Edit" asp-controller="Article" asp-route-id="@item.Id">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" fill="#0000F5">
+                                    <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
+                                </svg>
+                            </a>
+                            <a asp-action="Delete" asp-controller="Article" asp-route-id="@item.Id">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" fill="#5D0E07">
+                                    <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                                </svg>
+                            </a>
+                        </div>
+                    }
+                    <!-- Writer can edit articles as a writer -->
+                    @if (User.IsInRole("Writer"))
+                    {
+                        <a class="dropdown-item" asp-action="EditAsWriter" asp-controller="Article" asp-route-id="@item.Id">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" fill="#0000F5">
+                                <path d="M80 0v-160h800V0H80Zm160-320h56l312-311-29-29-28-28-311 312v56Zm-80 80v-170l448-447q11-11 25.5-17t30.5-6q16 0 31 6t27 18l55 56q12 11 17.5 26t5.5 31q0 15-5.5 29.5T777-687L330-240H160Zm560-504-56-56 56 56ZM608-631l-29-29-28-28 57 57Z" />
+                            </svg>
+                        </a>
+                    }
+                }
+            </div>
+
+            <!-- Second Section - Display 2 Articles -->
+            <div class="col-12 col-md-6 col-lg-6 mb-3">
+                @foreach (var item in Model.Skip(3).Take(2))
+                {
+                    <partial name="_ArticlePartial" model="item" />
+                    
+                    @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                    {
+                        <div class="action-buttons">
+                            <a asp-action="Edit" asp-controller="Article" asp-route-id="@item.Id">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" fill="#0000F5">
+                                    <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
+                                </svg>
+                            </a>
+                            <a asp-action="Delete" asp-controller="Article" asp-route-id="@item.Id">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" fill="#5D0E07">
+                                    <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                                </svg>
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- Third Section - Display 3 Articles -->
+            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                @foreach (var item in Model.Skip(5).Take(3))
+                {
+                    <partial name="_EditorsPartial" model="item" />
+                    
+                    @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                    {
+                        <div class="action-buttons">
+                            <a asp-action="Edit" asp-controller="Article" asp-route-id="@item.Id">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" fill="#0000F5">
+                                    <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
+                                </svg>
+                            </a>
+                            <a asp-action="Delete" asp-controller="Article" asp-route-id="@item.Id">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" fill="#5D0E07">
+                                    <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                                </svg>
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>You need a Premium subscription or the appropriate role (Admin, Editor, Writer) to view Editors' Choice articles.</p>
+}

@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using OnlineNews.Interfaces
+@using OnlineNews.Models.Database
+@using OnlineNews.Service
+@inject IArticleService _articleService
+
+@model IEnumerable<Article>
+
+@{
+    ViewData["Title"] = "GetArticles";
+}
+
+<h1>GetArticles</h1>
+
+@* <a asp-controller="Editor" asp-action="GetArticles"></a> *@
+
+<a asp-controller="Article" asp-action="AddArticle">Add</a>
+@foreach(var item in Model)
+{
+    <partial name="_EditorsPartial" model="item" />
+    
+
+    if(User.IsInRole("Editor"))
+    {
+        
+        <a asp-controller="Article" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+
+        
+    }
+    
+}
+    
+

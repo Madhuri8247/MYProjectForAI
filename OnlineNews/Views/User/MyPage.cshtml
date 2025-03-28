@@ -1,0 +1,128 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using OnlineNews.Models.Database
+@model OnlineNews.Models.ViewModels.UserPageViewModel
+
+@* Page Header *@
+<div class="container mt-5 text-center">
+    <h3 class="text-primary allfont">Welcome, @Model.User.FirstName @Model.User.LastName</h3>
+</div>
+
+@* Edit Profile Button *@
+<div class="container text-center mb-4">
+    <a asp-controller="Subscription" asp-action="EditProfile" class="btn btn-outline-primary btn-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5">
+            <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
+        </svg> Edit Profile
+    </a>
+</div>
+
+@* User Details *@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h5><strong>Date of Birth:</strong>@Model.User.DateofBirth.ToString("d")</h5>
+            <h5><strong>Email:</strong> @Model.User.Email</h5>
+        </div>
+    </div>
+</div>
+
+@* Conditionally Display Subscription Information *@
+@if (Model.Subscription != null && !User.IsInRole("Admin") && !User.IsInRole("Writer") && !User.IsInRole("Editor"))
+{
+    <div class="container mb-4">
+        <h3 class="text-success">Subscription Information</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Subscription Status:</strong> @Model.Subscription.SubscriptionType?.TypeName</p>
+                <p><strong>Price:</strong> $@Model.Subscription.SubscriptionType?.Price</p>
+                <p><strong>Created At:</strong> @Model.Subscription.CreatedAt.ToString("d")</p>
+                <p><strong>Expires At:</strong> @Model.Subscription.ExpiredAt.ToString("d")</p>
+                <p><strong>Remaining Days:</strong> @Model.RemainingDays days</p>
+            </div>
+        </div>
+
+        @* Payment Status *@
+        <div class="row">
+            <div class="col-md-6">
+                <p class="payment-status @(Model.Subscription.PaymentComplete ? "paid" : "not-paid")">
+                    <strong>Payment Status:</strong> @(Model.Subscription.PaymentComplete ? "Paid" : "Not Paid")
+                </p>
+            </div>
+        </div>
+    </div>
+}
+
+@* Display Message for Users with No Subscription or Restricted Roles *@
+@if (Model.Subscription == null && !User.IsInRole("Admin") && !User.IsInRole("Writer") && !User.IsInRole("Editor"))
+{
+    <div class="container">
+        <p class="lead text-danger allfont"><b>It looks like you don't have an active subscription at the moment. Would you like to subscribe? </b></p>
+        <a asp-controller="Subscription" asp-action="Subscribe" class="btn btn-primary btn-lg">Subscribe Now</a>
+    </div>
+}
+
+<br />
+
+@* Change Subscription Section (only for eligible users) *@
+@if (Model.Subscription != null && !User.IsInRole("Admin") && !User.IsInRole("Writer") && !User.IsInRole("Editor"))
+{
+    <div class="container">
+        <form asp-controller="User" asp-action="ChangeSubscription" method="post" class="d-flex align-items-center gap-3">
+            <select id="subscriptionType" name="subscriptionType" class="form-control w-50">
+                <option class="bg-warning" value="Basic">Basic</option>
+                <option class="bg-success" value="Premium">Premium</option>
+            </select>
+            <button type="submit" class="btn btn-success btn-lg allfont">Change Subscription</button>
+        </form>
+    </div>
+}
+
+@* TempData Messages *@
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info mt-3">
+        @TempData["Message"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @TempData["Error"]
+    </div>
+}
+
+<style>
+    .payment-status.not-paid {
+        color: #f44336;
+    }
+
+    .payment-status.paid {
+        color: #4caf50;
+    }
+
+    .no-subscription {
+        text-align: center;
+        font-size: 18px;
+        color: #777;
+    }
+
+    .form-control {
+        font-size: 16px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        transition: background-color 0.3s ease;
+    }
+
+        button:hover {
+            background-color: #007bff;
+        }
+
+    h5, .text-primary {
+        font-weight: bold;
+    }
+</style>

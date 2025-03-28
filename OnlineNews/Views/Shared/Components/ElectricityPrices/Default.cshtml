@@ -1,0 +1,75 @@
+﻿   
+@model OnlineNews.Models.API.SpotPriceNow
+
+
+<h4 class="justify-content-center" style="color:blue;"><b>Electricity Spot Prices</b></h4>
+<div class="row">
+    <div style="display:-webkit-inline;margin-left:auto">
+        <span><b style="color:blue;">Date:@Model.date</b></span><span> </span>
+        @for (int i = 0; i < Model.SE1.Length; i++)
+        {
+            <span style="color:blue;"><strong>  Hour:@Model.SE1[i].hour:00</strong></span>
+        }
+    </div>
+    <br />
+    <div class="row justify-content-center" style="margin-left:5px">
+        <table id="prices">
+            <tr>
+                <th>Area</th>
+                <th>Price(öre/kWh)</th>
+            </tr>
+            @for (int i = 0; i < Model.SE1.Length; i++)
+            {
+                <tr>
+                    <td>SE1</td>
+                    <td>@Model.SE1[i].price_sek</td>
+                </tr>
+                <tr>
+                    <td>SE2</td>
+                    <td>@Model.SE2[i].price_sek</td>
+                </tr>
+                <tr>
+                    <td>SE3</td>
+                    <td>@Model.SE3[i].price_sek</td>
+                </tr>
+                <tr>
+                    <td>SE4</td>
+                    <td>@Model.SE4[i].price_sek</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<style>
+    span{
+        padding-left:5px;
+        text-align:center;
+        font-family:'Times New Roman', Times, serif;
+        font-size:18px;
+    }
+
+    #prices {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 140%;
+    }
+        #prices td, #prices th {
+            border: 1px solid #3cb371;
+            padding: 8px;
+            text-align:center;
+        }
+        #prices tr:nth-child(even) {
+            background-color: #ddd;
+        }
+        #prices tr:hover {
+            background-color: #7e82aa;
+        }
+        #prices th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: center;
+            background-color: #143;
+            color: white;
+        }
+</style>

@@ -1,0 +1,32 @@
+﻿@model OnlineNews.Models.Database.Subscription
+
+@{
+    ViewData["Title"] = "SubscriptionDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class=" allfont ">Your Subscription</h2>
+
+<table class="table">
+    <tr>
+        <th>Subscription Type</th>
+        <td>@Model.SubscriptionType.TypeName</td>
+    </tr>
+    <tr>
+        <th>Created At</th>
+        <td>@Model.CreatedAt.ToString("yyyy-MM-dd")</td>
+    </tr>
+    <tr>
+        <th>Expired At</th>
+        <td>@Model.ExpiredAt.ToString("yyyy-MM-dd")</td>
+    </tr>
+    <tr>
+        <th>Payment Status</th>
+        <td>@(Model.PaymentComplete ? "Paid" : "Pending")</td>
+    </tr>
+</table>
+
+@if (!Model.PaymentComplete)
+{
+    <a class="btn btn-primary allfont" href="@Url.Action("DummyPayment", "Subscription")">Complete Payment</a>
+}

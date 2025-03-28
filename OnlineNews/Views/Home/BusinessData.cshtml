@@ -1,0 +1,77 @@
+﻿@model OnlineNews.Models.API.Businessprice
+
+<h4 class="row justify-content-center" style="color:blue;margin-top:20px;margin-bottom:20px;">
+    <b class="row" style="text-align:center;">Business Prices</b>
+</h4>
+<br />
+
+<!-- Check if 'top10' is not null or empty before rendering the table -->
+@if (Model?.top10 != null && Model.top10.Length > 0)
+{
+    <div class="row justify-content-center" style="margin-left:5px">
+        <table id="prices">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>PrevClose</th>
+                    <th>%Change</th>
+                    <th>Close</th>
+                    <th>Symbol</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.top10.Length; i++)
+                {
+                    <tr>
+                        <td>@Model.top10[i].name</td>
+                        <td>@Model.top10[i].prevClose</td>
+                        <td>@Model.top10[i].percentChange</td>
+                        <td>@Model.top10[i].close</td>
+                        <td>@Model.top10[i].symbol</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">No business prices available at the moment.</div>
+}
+
+<style>
+    #prices {
+        font-family: 'Times New Roman', Times, serif;
+        border-collapse: collapse;
+        width: 100%; /* Use 100% for better responsiveness */
+        font-weight: bold;
+    }
+
+        #prices td, #prices th {
+            border: 2px solid black;
+            text-align: center;
+            padding: 10px; /* Add padding for better spacing */
+        }
+
+        #prices tr:nth-child(even) {
+            background-color: darkgrey;
+        }
+
+        #prices th {
+            text-align: center;
+            background-color: darkslateblue;
+            color: white;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+    /* Optional: Style for alert message */
+    .alert {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 1.2em;
+    }
+</style>
+
+
+

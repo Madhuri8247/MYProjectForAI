@@ -1,0 +1,28 @@
+﻿
+@model IEnumerable<OnlineNews.Models.Database.Article>
+
+@{
+    ViewData["Title"] = "Search Result";
+}
+@{
+    var searchResults = ViewBag.msg as string;
+}
+
+<h3 class="row text-center" style="margin-top:0px;margin-bottom:10px;">Your search results:<b style="color:blue"> @searchResults</b></h3>
+<div class="row justify-content-center">
+    <div class="col-md-10  justify-content-center">
+        <div class="row  justify-content-center borderbarhere">
+        @foreach (var item in Model)
+        {
+            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                <partial name="_EditorsPartial" model="@item" />
+            </div>
+        }
+      </div>
+   </div>
+</div>
+<style>
+   .borderbarhere{
+       border-top:2px solid black;
+   }
+</style>

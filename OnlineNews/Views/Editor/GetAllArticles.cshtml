@@ -1,0 +1,70 @@
+﻿@model List<OnlineNews.Models.Database.Article>
+
+@{
+    ViewData["Title"] = "GetAllArticles";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+
+<div>
+    <a href="@Url.Action("GetAllArticles", "Editor", new { status = "Approved" })" class="btn btn-primary">Show Approved Articles</a>
+    <a href="@Url.Action("GetAllArticles", "Editor", new { status = "Rejected" })" class="btn btn-secondary">Show Rejected Articles</a>
+    <a href="@Url.Action("GetAllArticles", "Editor", new { status = "Pending" })" class="btn btn-warning">Show Pending Articles</a>
+    <a href="@Url.Action("GetAllArticles", "Editor", new { status = "All" })" class="btn btn-info">Show All Articles</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Content</th>
+            <th>Headline</th>
+            <th>Chosen Category</th>
+            <th>Editor's Choice</th>
+            <th>Approval Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var article in Model)
+        {
+            <tr>
+                <td>@article.Id</td>
+                <td>@article.Content</td>
+                <td>@article.Headline</td>
+                <td>@article.ChosenCategory</td>
+                <td>@article.EditorsChoice</td>
+                <td>
+                    @if (article.ApprovalStatus == "Approved")
+                    {
+                        <span class="text-success">Approved</span>
+                    }
+                    else if (article.ApprovalStatus == "Rejected")
+                    {
+                        <span class="text-warning">Rejected</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Pending</span>
+                    }
+                </td>
+                <td>
+                    @if (ViewData["isEditor"] != null && (bool)ViewData["isEditor"])
+                    {
+                        
+                        @if (article.ApprovalStatus == "Pending")
+                        {
+                            <form method="post" action="@Url.Action("ApproveArticle", "Editor", new { id = article.Id })" style="display:inline;">
+                                <button type="submit" class="btn btn-success">Approve</button>
+                            </form>
+                            <form method="post" action="@Url.Action("RejectArticle", "Editor", new { id = article.Id })" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Reject</button>
+                            </form>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

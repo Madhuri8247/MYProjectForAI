@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Subscribe";
+}
+<div class="mt-4"></div>
+<div class="mt-4"></div>
+<div class="mt-4"></div>
+<h2 class="allfont">Choose a Subscription</h2>
+<div class="mt-4"></div>
+<div class="mt-4"></div>
+<div class="mt-4"></div>
+<!-- Display success or error messages -->
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<form asp-action="Subscribe" method="post">
+    <div class="form-group">
+        <label for="subscriptionType">Select Subscription Type</label>
+        <select class="form-control" id="subscriptionType" name="subscriptionType" required>
+            <option value="Basic">Basic</option>
+            <option value="Premium">Premium</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Subscribe</button>
+</form>
+<div class="mt-4"></div>
+<div class="mt-4"></div>
+<div class="mt-4"></div>
