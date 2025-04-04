@@ -1,0 +1,23 @@
+﻿@using Microsoft.CognitiveServices.Speech
+@using Microsoft.CognitiveServices.Speech.Audio;
+
+
+@{
+    ViewData["Title"] = "ReadArticleAloud";
+}
+
+@{
+    var readstory = ViewBag.Story;
+    using(var synthesizer= new SpeechSynthesizer(Model))
+    {
+        using (var result = await synthesizer.SpeakTextAsync(readstory))
+        {
+            if(result.Reason==ResultReason.Canceled)
+            {
+                var cancellation = SpeechSynthesisCancellationDetails.FromResult(readstory);
+                throw new Exception(cancellation.Reason);
+            }
+        }
+    }
+}
+

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
 using OnlineNews.Interfaces;
 using OnlineNews.Models;
 using OnlineNews.Models.API;
@@ -8,6 +9,7 @@ using OnlineNews.Service;
 using OnlineNews.Services;
 using System.Diagnostics;
 using System.Security.Claims;
+using static System.Net.Mime.MediaTypeNames;
 
 public class HomeController : Controller
 {
@@ -77,7 +79,7 @@ public class HomeController : Controller
         var data = await _requestService.GetPrices();
         return View(data);
     }
-
+    
     [Authorize]
     public async Task<IActionResult> EditorsChoiced()
     {
@@ -109,11 +111,53 @@ public class HomeController : Controller
         return View(articles);
     }
 
-
-
     public IActionResult NoAccess()
     {
         return View();
     }
+
+    [HttpPost]
+    public async Task<IActionResult> ReadArticleAloud(int id)
+    {
+        // Get the article by ID
+        var articleContent = _articleService.GetArticleById(id).Content;
+        ViewBag.Story=articleContent;
+
+        // Azure Speech API Configuration
+        string speechKey = "CHXdJ9g6zbQ5DVXF9kZCEGBadw3FENvMD0prPQARsJ968ZGKQQ0sJQQJ99BCACYeBjFXJ3w3AAAYACOGAlvy"; // Replace with your actual key
+        string speechRegion = "eastus"; // Replace with your actual region
+
+        var speak = SpeechConfig.FromSubscription(speechKey, speechRegion);
+        speak.SpeechSynthesisVoiceName = "en-US-AvaMultilingualNeural"; // Choose voice
+
+        using (var synthesizer = new SpeechSynthesizer(speak))
+        {
+            using (var result = await synthesizer.SpeakTextAsync(articleContent))
+            {
+                if (result.Reason == ResultReason.SynthesizingAudioCompleted)
+                {
+                    return Content($"Speech synthesized for Text");
+                }
+                else if (result.Reason == ResultReason.Canceled)
+                {
+                    var cancellation = SpeechSynthesisCancellationDetails.FromResult(result);
+                    return Content($"Speech synthesis canceled: {cancellation.Reason}");
+
+                    if (cancellation.Reason == CancellationReason.Error)
+                    {
+                        return Content($"CANCELED: ErrorCode={cancellation.ErrorDetails}");
+                        return Content($"CANCELED: ErrorCode={cancellation.ErrorCode}");
+                        return Content($"CANCELED: Did you set the speech resource key and region values?");
+                    }
+                }
+            }
+            
+        }
+
+        return View(speak);
+    }
+
 }
+
+
 
