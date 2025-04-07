@@ -1,20 +1,22 @@
-﻿@using Microsoft.CognitiveServices.Speech
+﻿@using Microsoft.CognitiveServices.Speech;
 @using Microsoft.CognitiveServices.Speech.Audio;
+@model Microsoft.CognitiveServices.Speech.SpeechConfig;
 
 
 @{
-    ViewData["Title"] = "ReadArticleAloud";
+    ViewData["Title"] = "TexttoSpeech";
 }
 
 @{
     var readstory = ViewBag.Story;
+
     using(var synthesizer= new SpeechSynthesizer(Model))
     {
         using (var result = await synthesizer.SpeakTextAsync(readstory))
         {
             if(result.Reason==ResultReason.Canceled)
             {
-                var cancellation = SpeechSynthesisCancellationDetails.FromResult(readstory);
+                var cancellation = SpeechSynthesisCancellationDetails.FromResult(result);
                 throw new Exception(cancellation.Reason);
             }
         }

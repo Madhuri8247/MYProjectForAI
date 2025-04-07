@@ -117,43 +117,16 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ReadArticleAloud(int id)
+    public async Task<IActionResult> TexttoSpeech(int id)
     {
         // Get the article by ID
         var articleContent = _articleService.GetArticleById(id).Content;
         ViewBag.Story=articleContent;
-
+        string speechKey = "A1qXDXWK5E7oGuQXQl30cy0zxpuh3lPAq5xS637o1HYlPgd9EPeAJQQJ99BCACYeBjFXJ3w3AAAYACOGqgvS";
+        string speechRegion = "eastus";
         // Azure Speech API Configuration
-        string speechKey = "CHXdJ9g6zbQ5DVXF9kZCEGBadw3FENvMD0prPQARsJ968ZGKQQ0sJQQJ99BCACYeBjFXJ3w3AAAYACOGAlvy"; // Replace with your actual key
-        string speechRegion = "eastus"; // Replace with your actual region
-
         var speak = SpeechConfig.FromSubscription(speechKey, speechRegion);
-        speak.SpeechSynthesisVoiceName = "en-US-AvaMultilingualNeural"; // Choose voice
-
-        using (var synthesizer = new SpeechSynthesizer(speak))
-        {
-            using (var result = await synthesizer.SpeakTextAsync(articleContent))
-            {
-                if (result.Reason == ResultReason.SynthesizingAudioCompleted)
-                {
-                    return Content($"Speech synthesized for Text");
-                }
-                else if (result.Reason == ResultReason.Canceled)
-                {
-                    var cancellation = SpeechSynthesisCancellationDetails.FromResult(result);
-                    return Content($"Speech synthesis canceled: {cancellation.Reason}");
-
-                    if (cancellation.Reason == CancellationReason.Error)
-                    {
-                        return Content($"CANCELED: ErrorCode={cancellation.ErrorDetails}");
-                        return Content($"CANCELED: ErrorCode={cancellation.ErrorCode}");
-                        return Content($"CANCELED: Did you set the speech resource key and region values?");
-                    }
-                }
-            }
-            
-        }
-
+        speak.SpeechSynthesisVoiceName = "en-US-AvaMultilingualNeural"; 
         return View(speak);
     }
 
